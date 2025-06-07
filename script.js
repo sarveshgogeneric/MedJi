@@ -14,7 +14,7 @@ const products = [
         category: "otc",
         price: 7.49,
         description: "Anti-inflammatory for pain relief and fever reduction.",
-        image: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.indiamart.com%2Fproddetail%2Fibuprofen-tablets-ip-200-mg-24994070188.html&psig=AOvVaw22kdDbg1rEH6yLwhSTMDD4&ust=1749367644423000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCOCQ17vk3o0DFQAAAAAdAAAAABAE"
+        image: "assets/images/ibuprofen.jpg"
     },
     {
         id: 3,
@@ -22,7 +22,7 @@ const products = [
         category: "prescription",
         price: 12.99,
         description: "Antibiotic for bacterial infections. Prescription required.",
-        image: "https://via.placeholder.com/300x200?text=Amoxicillin"
+        image: "assets/images/amox.jpeg"
     },
     {
         id: 4,
@@ -30,7 +30,7 @@ const products = [
         category: "wellness",
         price: 9.99,
         description: "Immune system support and antioxidant.",
-        image: "https://via.placeholder.com/300x200?text=Vitamin+C"
+        image: "assets/images/Vitamin c.jpeg"
     },
     {
         id: 5,
