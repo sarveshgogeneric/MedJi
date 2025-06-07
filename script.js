@@ -14,7 +14,7 @@ const products = [
         category: "otc",
         price: 7.49,
         description: "Anti-inflammatory for pain relief and fever reduction.",
-        image: "https://images.app.goo.gl/bcfgvAmWTJpfBNWM7"
+        image: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.indiamart.com%2Fproddetail%2Fibuprofen-tablets-ip-200-mg-24994070188.html&psig=AOvVaw22kdDbg1rEH6yLwhSTMDD4&ust=1749367644423000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCOCQ17vk3o0DFQAAAAAdAAAAABAE"
     },
     {
         id: 3,
