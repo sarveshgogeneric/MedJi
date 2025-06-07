@@ -38,7 +38,7 @@ const products = [
         category: "otc",
         price: 8.29,
         description: "Antihistamine for allergy relief.",
-        image: "https://via.placeholder.com/300x200?text=Loratadine"
+        image: "assets/images/Loratadine 10mg.jpeg"
     },
     {
         id: 6,
@@ -46,7 +46,7 @@ const products = [
         category: "prescription",
         price: 15.49,
         description: "For acid reflux and heartburn relief.",
-        image: "https://via.placeholder.com/300x200?text=Omeprazole"
+        image: "assets/images/Omeprazole 20mg.jpeg"
     },
     {
         id: 7,
@@ -54,7 +54,7 @@ const products = [
         category: "wellness",
         price: 14.99,
         description: "Daily essential vitamins and minerals.",
-        image: "https://via.placeholder.com/300x200?text=Multivitamin"
+        image: "assets/images/complex.jpeg"
     },
     {
         id: 8,
@@ -62,7 +62,7 @@ const products = [
         category: "otc",
         price: 6.79,
         description: "For allergy symptoms and hives.",
-        image: "https://via.placeholder.com/300x200?text=Cetirizine"
+        image: "assets/images/Cetirizine 10mg.jpeg"
     }
 ];
 
