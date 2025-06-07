@@ -1,4 +1,4 @@
-// Enhanced Product Data with Ratings and Stock
+// Sample product data
 const products = [
     {
         id: 1,
@@ -6,181 +6,250 @@ const products = [
         category: "otc",
         price: 5.99,
         description: "For relief of mild to moderate pain and fever.",
-        image: "https://via.placeholder.com/300x200?text=Paracetamol",
-        rating: 4.5,
-        reviews: 120,
-        stock: 50,
-        prescription: false
+        image: "assets/images/sarvesh.jpg"
     },
-    // More products with enhanced data...
+    {
+        id: 2,
+        name: "Ibuprofen 200mg",
+        category: "otc",
+        price: 7.49,
+        description: "Anti-inflammatory for pain relief and fever reduction.",
+        image: "assets/images/ibuprofen.jpg"
+    },
+    {
+        id: 3,
+        name: "Amoxicillin 500mg",
+        category: "prescription",
+        price: 12.99,
+        description: "Antibiotic for bacterial infections. Prescription required.",
+        image: "assets/images/amox.jpeg"
+    },
+    {
+        id: 4,
+        name: "Vitamin C 1000mg",
+        category: "wellness",
+        price: 9.99,
+        description: "Immune system support and antioxidant.",
+        image: "assets/images/Vitamin c.jpeg"
+    },
+    {
+        id: 5,
+        name: "Loratadine 10mg",
+        category: "otc",
+        price: 8.29,
+        description: "Antihistamine for allergy relief.",
+        image: "assets/images/Loratadine 10mg.jpeg"
+    },
+    {
+        id: 6,
+        name: "Omeprazole 20mg",
+        category: "prescription",
+        price: 15.49,
+        description: "For acid reflux and heartburn relief.",
+        image: "assets/images/Omeprazole 20mg.jpeg"
+    },
+    {
+        id: 7,
+        name: "Multivitamin Complex",
+        category: "wellness",
+        price: 14.99,
+        description: "Daily essential vitamins and minerals.",
+        image: "assets/images/complex.jpeg"
+    },
+    {
+        id: 8,
+        name: "Cetirizine 10mg",
+        category: "otc",
+        price: 6.79,
+        description: "For allergy symptoms and hives.",
+        image: "assets/images/Cetirizine 10mg.jpeg"
+    }
 ];
 
-// Enhanced Cart Functionality
-class Cart {
-    constructor() {
-        this.items = JSON.parse(localStorage.getItem('cart')) || [];
-    }
-    
-    addItem(product, quantity = 1) {
-        const existingItem = this.items.find(item => item.id === product.id);
-        
-        if (existingItem) {
-            existingItem.quantity += quantity;
-        } else {
-            this.items.push({
-                ...product,
-                quantity
-            });
-        }
-        
-        this.save();
-    }
-    
-    // More cart methods...
-}
+// Cart functionality
+let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
 // DOM Elements
-const dom = {
-    productContainer: document.getElementById('product-container'),
-    cartCount: document.getElementById('cart-count'),
-    searchInput: document.getElementById('search-input'),
-    mobileMenuToggle: document.querySelector('.mobile-menu-toggle'),
-    mainNav: document.getElementById('main-nav'),
-    // More element references...
-};
+const productContainer = document.getElementById('product-container');
+const cartCount = document.getElementById('cart-count');
+const cartLink = document.getElementById('cart-link');
+const cartModal = document.getElementById('cart-modal');
+const cartItems = document.getElementById('cart-items');
+const cartTotal = document.getElementById('cart-total');
+const emptyCartMessage = document.getElementById('empty-cart-message');
+const checkoutBtn = document.getElementById('checkout-btn');
+const checkoutModal = document.getElementById('checkout-modal');
+const closeButtons = document.querySelectorAll('.close');
+const filterButtons = document.querySelectorAll('.filter-btn');
 
-// Initialize
-document.addEventListener('DOMContentLoaded', () => {
-    const cart = new Cart();
+// Display products
+function displayProducts(category = 'all') {
+    productContainer.innerHTML = '';
     
-    // Display initial products
-    displayProducts();
+    const filteredProducts = category === 'all' 
+        ? products 
+        : products.filter(product => product.category === category);
     
-    // Mobile menu toggle
-    dom.mobileMenuToggle.addEventListener('click', () => {
-        const expanded = dom.mobileMenuToggle.getAttribute('aria-expanded') === 'true';
-        dom.mobileMenuToggle.setAttribute('aria-expanded', !expanded);
-        dom.mainNav.classList.toggle('show');
-    });
-    
-    // Search functionality
-    dom.searchInput.addEventListener('input', (e) => {
-        const results = searchProducts(e.target.value);
-        displayProducts(results);
-    });
-    
-    // Medicine reminder
-    document.getElementById('reminder-btn').addEventListener('click', () => {
-        if (Notification.permission !== 'granted') {
-            Notification.requestPermission().then(permission => {
-                if (permission === 'granted') {
-                    showReminderModal();
-                }
-            });
-        } else {
-            showReminderModal();
-        }
-    });
-    
-    // More initialization...
-});
-
-// Enhanced Product Display with Sorting
-function displayProducts(productsToShow = products, sortOption = 'name-asc') {
-    // Clear container
-    dom.productContainer.innerHTML = '';
-    
-    // Sort products
-    const sortedProducts = [...productsToShow].sort((a, b) => {
-        switch(sortOption) {
-            case 'name-asc': return a.name.localeCompare(b.name);
-            case 'name-desc': return b.name.localeCompare(a.name);
-            case 'price-asc': return a.price - b.price;
-            case 'price-desc': return b.price - a.price;
-            default: return 0;
-        }
-    });
-    
-    // Display products
-    sortedProducts.forEach(product => {
-        const productCard = createProductCard(product);
-        dom.productContainer.appendChild(productCard);
-    });
-}
-
-// Create Product Card with all new features
-function createProductCard(product) {
-    const card = document.createElement('div');
-    card.className = 'product-card';
-    
-    // Stock badge
-    const stockStatus = product.stock > 0 ? 'in-stock' : 'out-of-stock';
-    const stockText = product.stock > 0 ? 'In Stock' : 'Out of Stock';
-    
-    card.innerHTML = `
-        ${product.stock < 10 && product.stock > 0 ? '<span class="product-badge">Low Stock</span>' : ''}
-        <div class="product-image">
-            <img src="${product.image}" alt="${product.name}" loading="lazy">
-        </div>
-        <div class="product-info">
-            <span class="product-category">${formatCategory(product.category)}</span>
-            <h3>${product.name}</h3>
-            <p class="product-description">${product.description}</p>
-            <div class="product-meta">
-                <div class="product-rating">
-                    <i class="fas fa-star"></i> ${product.rating} (${product.reviews})
+    filteredProducts.forEach(product => {
+        const productCard = document.createElement('div');
+        productCard.className = 'product-card';
+        productCard.innerHTML = `
+            <div class="product-image">
+                <img src="${product.image}" alt="${product.name}">
+            </div>
+            <div class="product-info">
+                <span class="product-category">${formatCategory(product.category)}</span>
+                <h3>${product.name}</h3>
+                <p class="product-description">${product.description}</p>
+                <p class="product-price">$${product.price.toFixed(2)}</p>
+                <div class="product-actions">
+                    <button class="add-to-cart" data-id="${product.id}">Add to Cart</button>
+                    <button class="view-details">Details</button>
                 </div>
-                <div class="product-stock ${stockStatus}">${stockText}</div>
             </div>
-            <p class="product-price">$${product.price.toFixed(2)}</p>
-            <div class="product-actions">
-                <button class="add-to-cart" data-id="${product.id}" 
-                    ${product.stock <= 0 ? 'disabled' : ''}>
-                    ${product.stock <= 0 ? 'Out of Stock' : 'Add to Cart'}
+        `;
+        productContainer.appendChild(productCard);
+    });
+    
+    // Add event listeners to "Add to Cart" buttons
+    document.querySelectorAll('.add-to-cart').forEach(button => {
+        button.addEventListener('click', (e) => {
+            const productId = parseInt(e.target.getAttribute('data-id'));
+            addToCart(productId);
+        });
+    });
+}
+
+// Format category for display
+function formatCategory(category) {
+    const categories = {
+        'otc': 'Over-the-Counter',
+        'prescription': 'Prescription',
+        'wellness': 'Wellness'
+    };
+    return categories[category] || category;
+}
+
+// Add to cart function
+function addToCart(productId) {
+    const product = products.find(p => p.id === productId);
+    if (!product) return;
+    
+    const existingItem = cart.find(item => item.id === productId);
+    
+    if (existingItem) {
+        existingItem.quantity += 1;
+    } else {
+        cart.push({
+            id: product.id,
+            name: product.name,
+            price: product.price,
+            image: product.image,
+            quantity: 1
+        });
+    }
+    
+    updateCart();
+    showNotification(`${product.name} added to cart`);
+}
+
+// Update cart display
+function updateCart() {
+    // Save to localStorage
+    localStorage.setItem('cart', JSON.stringify(cart));
+    
+    // Update cart count
+    const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
+    cartCount.textContent = totalItems;
+    
+    // Update cart modal
+    if (cart.length === 0) {
+        emptyCartMessage.style.display = 'block';
+        cartItems.innerHTML = '';
+    } else {
+        emptyCartMessage.style.display = 'none';
+        cartItems.innerHTML = '';
+        
+        cart.forEach(item => {
+            const cartItem = document.createElement('div');
+            cartItem.className = 'cart-item';
+            cartItem.innerHTML = `
+                <div class="cart-item-info">
+                    <div class="cart-item-image">
+                        <img src="${item.image}" alt="${item.name}">
+                    </div>
+                    <div>
+                        <h4>${item.name}</h4>
+                        <p>$${item.price.toFixed(2)}</p>
+                    </div>
+                </div>
+                <div class="cart-item-quantity">
+                    <button class="quantity-btn minus" data-id="${item.id}">-</button>
+                    <span>${item.quantity}</span>
+                    <button class="quantity-btn plus" data-id="${item.id}">+</button>
+                </div>
+                <div class="cart-item-price">
+                    $${(item.price * item.quantity).toFixed(2)}
+                </div>
+                <button class="remove-item" data-id="${item.id}">
+                    <i class="fas fa-trash"></i>
                 </button>
-                <button class="view-details">Details</button>
-            </div>
-        </div>
-    `;
-    
-    return card;
-}
-
-// Medicine Reminder Functionality
-function showReminderModal() {
-    // Implementation for reminder modal
-}
-
-// Prescription Upload Handling
-function handlePrescriptionUpload(file) {
-    // Validate file type and size
-    const validTypes = ['image/jpeg', 'image/png', 'application/pdf'];
-    const maxSize = 5 * 1024 * 1024; // 5MB
-    
-    if (!validTypes.includes(file.type)) {
-        showNotification('Invalid file type. Please upload JPEG, PNG or PDF.', 'error');
-        return false;
+            `;
+            cartItems.appendChild(cartItem);
+        });
+        
+        // Add event listeners to quantity buttons
+        document.querySelectorAll('.quantity-btn').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const productId = parseInt(e.target.getAttribute('data-id'));
+                const isPlus = e.target.classList.contains('plus');
+                updateCartItemQuantity(productId, isPlus);
+            });
+        });
+        
+        // Add event listeners to remove buttons
+        document.querySelectorAll('.remove-item').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const productId = parseInt(e.target.getAttribute('data-id'));
+                removeFromCart(productId);
+            });
+        });
     }
     
-    if (file.size > maxSize) {
-        showNotification('File too large. Max 5MB allowed.', 'error');
-        return false;
-    }
-    
-    // Process the file
-    return true;
+    // Update total
+    const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    cartTotal.textContent = total.toFixed(2);
 }
 
-// Enhanced Notification System
-function showNotification(message, type = 'success') {
+// Update cart item quantity
+function updateCartItemQuantity(productId, isPlus) {
+    const item = cart.find(item => item.id === productId);
+    if (!item) return;
+    
+    if (isPlus) {
+        item.quantity += 1;
+    } else {
+        item.quantity -= 1;
+        if (item.quantity <= 0) {
+            cart = cart.filter(item => item.id !== productId);
+        }
+    }
+    
+    updateCart();
+}
+
+// Remove from cart
+function removeFromCart(productId) {
+    cart = cart.filter(item => item.id !== productId);
+    updateCart();
+    showNotification('Item removed from cart');
+}
+
+// Show notification
+function showNotification(message) {
     const notification = document.createElement('div');
-    notification.className = `notification ${type}`;
-    notification.setAttribute('role', 'alert');
-    notification.innerHTML = `
-        <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
-        ${message}
-    `;
-    
+    notification.className = 'notification';
+    notification.textContent = message;
     document.body.appendChild(notification);
     
     setTimeout(() => {
@@ -195,35 +264,99 @@ function showNotification(message, type = 'success') {
     }, 3000);
 }
 
-// Initialize all event listeners
-function initEventListeners() {
-    // Product filter buttons
-    document.querySelectorAll('.filter-btn').forEach(button => {
+// Initialize the page
+document.addEventListener('DOMContentLoaded', () => {
+    displayProducts();
+    updateCart();
+    
+    // Filter buttons
+    filterButtons.forEach(button => {
         button.addEventListener('click', () => {
-            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            filterButtons.forEach(btn => btn.classList.remove('active'));
             button.classList.add('active');
-            const category = button.dataset.category;
-            displayProducts(category === 'all' ? products : products.filter(p => p.category === category));
+            const category = button.getAttribute('data-category');
+            displayProducts(category);
         });
     });
     
-    // Sort dropdown
-    document.getElementById('sort').addEventListener('change', (e) => {
-        displayProducts(undefined, e.target.value);
+    // Cart modal
+    cartLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        cartModal.style.display = 'block';
     });
     
-    // More event listeners...
-}
-
-// Initialize the app
-function init() {
-    initEventListeners();
-    updateCartCount();
+    // Checkout button
+    checkoutBtn.addEventListener('click', () => {
+        cartModal.style.display = 'none';
+        checkoutModal.style.display = 'block';
+    });
     
-    // Check for prescription items in cart
-    if (cart.items.some(item => item.prescription)) {
-        document.getElementById('prescription-required').style.display = 'block';
-    }
-}
+    // Close modals
+    closeButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            cartModal.style.display = 'none';
+            checkoutModal.style.display = 'none';
+        });
+    });
+    
+    // Close modals when clicking outside
+    window.addEventListener('click', (e) => {
+        if (e.target === cartModal) {
+            cartModal.style.display = 'none';
+        }
+        if (e.target === checkoutModal) {
+            checkoutModal.style.display = 'none';
+        }
+    });
+    
+    // Payment method toggle
+    document.querySelectorAll('input[name="payment"]').forEach(radio => {
+        radio.addEventListener('change', (e) => {
+            const creditCardInfo = document.getElementById('credit-card-info');
+            if (e.target.value === 'cod') {
+                creditCardInfo.style.display = 'none';
+            } else {
+                creditCardInfo.style.display = 'block';
+            }
+        });
+    });
+    
+    // Checkout form submission
+    document.getElementById('checkout-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        alert('Order placed successfully! Thank you for your purchase.');
+        cart = [];
+        updateCart();
+        checkoutModal.style.display = 'none';
+    });
+    
+    // Contact form submission
+    document.getElementById('contact-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        alert('Thank you for your message. We will get back to you soon.');
+        e.target.reset();
+    });
+});
 
-init();
+// Add notification styles dynamically
+const notificationStyles = document.createElement('style');
+notificationStyles.textContent = `
+    .notification {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: var(--primary-color);
+        color: white;
+        padding: 15px 25px;
+        border-radius: 5px;
+        box-shadow: var(--box-shadow);
+        opacity: 0;
+        transition: opacity 0.3s;
+        z-index: 1000;
+    }
+    .notification.show {
+        opacity: 1;
+    }
+`;
+document.head.appendChild(notificationStyles);
