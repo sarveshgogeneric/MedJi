@@ -6,7 +6,7 @@ const products = [
         category: "otc",
         price: 5.99,
         description: "For relief of mild to moderate pain and fever.",
-        image: "images\PYREMUST-650-TAB.jpg"
+        image: "assets/images/sarvesh.jpg"
     },
     {
         id: 2,
